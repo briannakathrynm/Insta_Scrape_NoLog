@@ -16,6 +16,14 @@ def insta_post_links(driver, username, post_count):
     post_links = []
     print("Getting Links...")
     post_num = 0
+    # Checking if account has a lot of posts..
+    number_posts = driver.find_element_by_xpath("""/html/body/div[1]/section/main/div/header/section/ul/li[1]/a/span
+                                                """).text.replace(",", "")
+    number_posts = int(number_posts)
+    if number_posts >= 3000:
+        press_button = True
+    else:
+        press_button = False
     while len(post_links) < post_count:
         links = [a.get_attribute('href')
                  for a in driver.find_elements_by_tag_name('a')]
@@ -23,6 +31,12 @@ def insta_post_links(driver, username, post_count):
             if post in link and link not in post_links:
                 post_num = post_num + 1
                 post_links.append(link)
+                if post_num == 1 and press_button is True:
+                    # Accounts with a lot of posts have this button
+                    scroll_down = "window.scrollTo(0, document.body.scrollHeight);"
+                    driver.execute_script(scroll_down)
+                    button = driver.find_element_by_css_selector(".tCibT")
+                    button.click()
         scroll_down = "window.scrollTo(0, document.body.scrollHeight);"
         driver.execute_script(scroll_down)
         time.sleep(10)
