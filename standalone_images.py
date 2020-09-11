@@ -1,6 +1,4 @@
-import time
-import urllib
-from urllib import request
+from urllib.request import urlretrieve
 from selenium.common.exceptions import NoSuchElementException
 
 
@@ -14,11 +12,12 @@ def url_to_img(driver, instagram_urls, file_path):
     :return: Saves image locally to file_path
     """
     global image
+    driver.implicitly_wait(2)
     post_num = -1
     for url in instagram_urls:
         post_num = post_num + 1
         driver.get(url)
-        time.sleep(3)
+        driver.implicitly_wait(2)
         try:
             image = driver.find_element_by_xpath(
                 """/html/body/span/section/main/div/div/article/
@@ -53,5 +52,4 @@ def url_to_img(driver, instagram_urls, file_path):
                                 except NoSuchElementException:
                                     print("No Image")
         image = image.get_attribute("src")
-        urllib.request.urlretrieve(image,
-                                   file_path + "\\image" + str(post_num) + ".jpg")
+        urlretrieve(image, file_path + " image" + str(post_num) + ".jpg")
