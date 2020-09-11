@@ -1,5 +1,6 @@
 import re
 import time
+from selenium.common.exceptions import NoSuchElementException
 
 
 def insta_post_links(driver, username, post_count):
@@ -98,11 +99,18 @@ def insta_details(driver, url):
         post_type = 'video'
     age = driver.find_element_by_css_selector('#react-root > section > main > div > div > article > div.eo2As > '
                                               'div.k_Q0X.NnvRN > a').text
-    comment = driver.find_element_by_xpath(
-        """/html/body/div[1]/section/main/div/div[1]/article/
+    try:
+        comment = driver.find_element_by_xpath(
+            """/html/body/div[1]/section/main/div/div[1]/article/
         div[3]/div[1]/ul/div/li/div/div/div[2]/span""").text
-    hashtags = find_hashtags(comment)
-    mentions = find_mentions(comment)
+    except NoSuchElementException:
+        comment = " "
+    if comment != " ":
+        hashtags = find_hashtags(comment)
+        mentions = find_mentions(comment)
+    else:
+        hashtags = " "
+        mentions = " "
     post_details = {'link': url, 'type': post_type, 'likes/views': likes, 'date posted': age, 'comments': comment,
                     'hashtags': hashtags, 'mentions': mentions}
     driver.implicitly_wait(2)
