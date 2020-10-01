@@ -50,6 +50,11 @@ def url_to_img(driver, instagram_urls, file_path):
                                                                          article/div[2]/div/div[1]/div[2]/div/div/div/
                                                                          ul/li[2]/div/div/div/div[1]/div/div/video""")
                                 except NoSuchElementException:
-                                    print("No Image")
+                                    # Video in Playback Mode
+                                    try:
+                                        image = driver.find_element_by_xpath("""/html/body/div[1]/section/main/div/div/
+                                                                            article/div[2]/div/div/div/div/div/video""")
+                                    except NoSuchElementException:
+                                        print("No Image")
         image = image.get_attribute("src")
         urlretrieve(image, file_path + " image" + str(post_num) + ".jpg")
